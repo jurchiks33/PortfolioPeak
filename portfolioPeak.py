@@ -42,6 +42,15 @@ def fetch_and_display_stock_data():
         fig, ax = plt.subplots()
         stock_data['Close'].plot (ax=ax, title=f"{ticker} Stock Price")
 
+        canvas = FigureCanvasTkAgg(fig, master=root)
+        canvas.draw()
+        canvas.get_tk_widget().pack()
+
+        plt.close(fig)
+    
+    except Exception as e:
+        messagebox.showinfo("Error", f"An error occured: {e}")
+
 # Set up the GUI
 root = tk.Tk()
 root.title("Stock Price App")
