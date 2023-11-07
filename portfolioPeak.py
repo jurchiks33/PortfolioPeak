@@ -1,5 +1,9 @@
-import tkinter as tk  # Import statement added here
+import tkinter as tk  
 from tkinter import messagebox
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import yfinance as yf
+from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
@@ -21,6 +25,9 @@ def fetch_stock_price():
             messagebox.showinfo("Error", "Price element not found.")
     else:
         messagebox.showinfo("Error", f"Failed to fetch page with status code: {response.status_code}")
+
+#function that will fetch and display historical stock data on a graph
+
 
 # Set up the GUI
 root = tk.Tk()
