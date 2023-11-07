@@ -25,6 +25,15 @@ def fetch_stock_price():
             messagebox.showinfo("Error", "Price element not found.")
     else:
         messagebox.showinfo("Error", f"Failed to fetch page with status code: {response.status_code}")
+    
+#function to validate and format date
+def validate_and_format_date(data_str):
+    try:
+        date_obj = datetime.strptime(data_str, "%Y-%m-%d")
+        formatted_date_str = date_obj.strftime("%Y-%m-%d")
+        return formatted_date_str
+    except ValueError as e:
+        messagebox.showinfo("Error", f"Date format error: {e}")
 
 #function that will fetch and display historical stock data on a graph
 def fetch_and_display_stock_data():
