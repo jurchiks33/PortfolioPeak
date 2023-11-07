@@ -29,7 +29,7 @@ def fetch_stock_price():
 #function that will fetch and display historical stock data on a graph
 def fetch_and_display_stock_data():
     ticker = entry_ticker.get()
-    start_date = entry_start_data.get()
+    start_date = entry_start_date.get()
     end_date = entry_end_date.get()
 
     if not ticker:
@@ -68,5 +68,12 @@ button_fetch.pack(side=tk.LEFT)
 label_price = tk.Label(root, text="Enter a stock ticker symbol and click fetch")
 label_price.pack(pady=20)
 
-# Run the application
+entry_start_date = tk.Entry(root)
+entry_start_date.pack()
+entry_start_date.insert(0, "Start Date (YYYY-MM-DD)")
+
+entry_end_date = tk.Entry(root)
+entry_end_date.pack()
+entry_end_date.insert(0, "End Date (YYYY-MM-DD)")
+
 root.mainloop()
