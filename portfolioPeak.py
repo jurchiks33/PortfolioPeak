@@ -7,6 +7,17 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
+
+def on_entry_click(event, entry, default_text):
+    if entry.get() == default_text:
+        entry.delete(0, tk.END)
+        entry.config(fg='black')
+
+def on_focusout(event, entry, default_text):
+    if entry.get() == '':
+        entry.insert(0, default_text)
+        entry.config(fg='grey')
+
 # Define the function to fetch stock price
 def fetch_stock_price():
     ticker = entry_ticker.get()
