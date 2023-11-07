@@ -41,7 +41,10 @@ def fetch_and_display_stock_data():
     start_date = entry_start_date.get()
     end_date = entry_end_date.get()
 
-    if not ticker:
+    start_date = validate_and_format_date(start_date)
+    end_date = validate_and_format_date(end_date)
+
+    if not start_date or not end_date:
         messagebox.showinfo("Error", "Please enter stock ticker symbol")
         return
     
