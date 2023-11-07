@@ -27,7 +27,20 @@ def fetch_stock_price():
         messagebox.showinfo("Error", f"Failed to fetch page with status code: {response.status_code}")
 
 #function that will fetch and display historical stock data on a graph
+def fetch_and_display_stock_data():
+    ticker = entry_ticker.get()
+    start_date = entry_start_data.get()
+    end_date = entry_end_date.get()
 
+    if not ticker:
+        messagebox.showinfo("Error", "Please enter stock ticker symbol")
+        return
+    
+    try:
+        stock_data = yf.download(ticker, start=start_date, end=end_date)
+
+        fig, ax = plt.subplots()
+        stock_data['Close'].plot (ax=ax, title=f"{ticker} Stock Price")
 
 # Set up the GUI
 root = tk.Tk()
