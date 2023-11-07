@@ -76,4 +76,7 @@ entry_end_date = tk.Entry(root)
 entry_end_date.pack()
 entry_end_date.insert(0, "End Date (YYYY-MM-DD)")
 
+button_fetch_graph = tk.Button(root, text="Display Graph", command=fetch_and_display_stock_data)
+button_fetch_graph.pack(pady=10)
+
 root.mainloop()
