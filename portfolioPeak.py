@@ -66,7 +66,21 @@ def fetch_and_display_stock_data():
     start_date = validate_and_format_date(start_date)
     end_date = validate_and_format_date(end_date)
 
+    if not (start_date and end_date)
+        messagebox.showinfo("Error", "Please enter valid start and end dates")
+        return
     
+    try:
+        stock_data1 = yf.download(ticker1, start=start_date, end=end_date)
+        stock_data2 = yf.download(ticker2, start=start_date, end=end_date)
+
+        fig, ax = plt.subplots()
+        if not stock_data1.empty:
+            stock_data1['Close'].plot(ax=ax, label=f"{ticker1} Closing Price")
+        if not stock_data2.empty:
+            stock_data2['Close'].plot(ax=ax, label=f"{ticker2} Closing Price")
+
+
     # ticker = entry_ticker.get()
     # start_date = entry_start_date.get()
     # end_date = entry_end_date.get()
