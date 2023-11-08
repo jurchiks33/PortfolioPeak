@@ -66,7 +66,7 @@ def fetch_and_display_stock_data():
     start_date = validate_and_format_date(start_date)
     end_date = validate_and_format_date(end_date)
 
-    if not (start_date and end_date)
+    if not (start_date and end_date):
         messagebox.showinfo("Error", "Please enter valid start and end dates")
         return
     
@@ -84,6 +84,15 @@ def fetch_and_display_stock_data():
         ax.set_title(f"{ticker1} vs {ticker2} Stock Price Comparison")
         ax.set_xlabel("Date")
         ax.set_ylabel("Price")
+
+        canvas = FigureCanvasTkAgg(fig, master=root)
+        canvas.draw()
+        canvas.get_tk_widget().pack()
+
+        plt.close(fig)
+
+    except Exception as e:
+        messagebox.showinfo("Error", f"An error occured: (e)")
 
 
     # ticker = entry_ticker.get()
@@ -115,12 +124,25 @@ def fetch_and_display_stock_data():
 frame = tk.Frame(root)
 frame.pack(pady=20)
 
+entry_ticker1 = tk.Entry(frame)
+entry_ticker1.pack(side=tk.LEFT)
+entry_ticker1.insert(0, "First Ticker")
+
+# Entry for the second stock ticker
+entry_ticker2 = tk.Entry(frame)
+entry_ticker2.pack(side=tk.LEFT)
+entry_ticker2.insert(0, "Second Ticker")
+
+# Button to fetch and plot data
+button_fetch_graph = tk.Button(frame, text="Display Graph", command=fetch_and_display_stock_data)
+button_fetch_graph.pack(side=tk.LEFT)
+
 entry_ticker = tk.Entry(frame)
 entry_ticker.pack(side=tk.LEFT)
 
-# Button command corrected to 'fetch_stock_price'
-button_fetch = tk.Button(frame, text="Fetch Data", command=fetch_stock_price)
-button_fetch.pack(side=tk.LEFT)
+# # Button command corrected to 'fetch_stock_price'
+# button_fetch = tk.Button(frame, text="Fetch Data", command=fetch_stock_price)
+# button_fetch.pack(side=tk.LEFT)
 
 label_price = tk.Label(root, text="Enter a stock ticker symbol and click fetch")
 label_price.pack(pady=20)
