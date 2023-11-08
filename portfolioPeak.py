@@ -34,24 +34,37 @@ def on_focusout(event, entry, default_text):
         entry.config(fg='grey')
 
 # Define the function to fetch stock price
+# def fetch_stock_price():
+#     ticker = entry_ticker.get()
+#     if not ticker:
+#         messagebox.showinfo("Error", "Please enter a stock ticker symbol")
+#         return
+
+#     url = f"https://finance.yahoo.com/quote/{ticker}"
+#     response = requests.get(url)
+#     if response.status_code == 200:
+#         soup = BeautifulSoup(response.text, 'html.parser')
+#         price = soup.find('fin-streamer', {'class': 'Fw(b) Fz(36px) Mb(-4px) D(ib)'})
+#         if price:
+#             label_price.config(text=f"Current price of {ticker}: ${price.text}")
+#         else:
+#             messagebox.showinfo("Error", "Price element not found.")
+#     else:
+#         messagebox.showinfo("Error", f"Failed to fetch page with status code: {response.status_code}")
+    
 def fetch_stock_price():
     ticker = entry_ticker.get()
     if not ticker:
         messagebox.showinfo("Error", "Please enter a stock ticker symbol")
         return
-
-    url = f"https://finance.yahoo.com/quote/{ticker}"
-    response = requests.get(url)
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.text, 'html.parser')
-        price = soup.find('fin-streamer', {'class': 'Fw(b) Fz(36px) Mb(-4px) D(ib)'})
-        if price:
-            label_price.config(text=f"Current price of {ticker}: ${price.text}")
-        else:
-            messagebox.showinfo("Error", "Price element not found.")
-    else:
-        messagebox.showinfo("Error", f"Failed to fetch page with status code: {response.status_code}")
     
+    stock = yf.Ticker(ticker)
+    todays_data = stock.history(period='1d')
+    if not todays_data.empty:
+        price = todays_data['Close'].iloc[-1]  # Get the last close price
+        label_price.config(text=f"Current price of {ticker}: ${price}")
+    else:
+        messagebox.showinfo("Error", "Could not retrieve stock data. Please check the ticker symbol.")
 #function to validate and format date
 def validate_and_format_date(data_str):
     try:
@@ -106,23 +119,19 @@ button_fetch.pack(side=tk.LEFT)
 label_price = tk.Label(root, text="Enter a stock ticker symbol and click fetch")
 label_price.pack(pady=20)
 
-# entry_start_date = tk.Entry(root)
-# entry_start_date.pack()
-# entry_start_date.insert(0, "Start Date (YYYY-MM-DD)")
+#Date entry field starting
 entry_start_date = tk.Entry(root)
 entry_start_date.pack()
 entry_start_date.insert(0, "Start Date (YYYY-MM-DD)")
 entry_start_date.bind('<FocusIn>', lambda event: on_entry_click(event, entry_start_date, "Start Date (YYYY-MM-DD)"))
 entry_start_date.bind('<FocusOut>', lambda event: on_focusout(event, entry_start_date, "Start Date (YYYY-MM-DD)"))
 
-# entry_end_date = tk.Entry(root)
-# entry_end_date.pack()
-# entry_end_date.insert(0, "End Date (YYYY-MM-DD)")
 entry_end_date = tk.Entry(root)
 entry_end_date.pack()
 entry_end_date.insert(0, "End Date (YYYY-MM-DD)")
 entry_end_date.bind('<FocusIn>', lambda event: on_entry_click(event, entry_end_date, "End Date (YYYY-MM-DD)"))
 entry_end_date.bind('<FocusOut>', lambda event: on_focusout(event, entry_end_date, "End Date (YYYY-MM-DD)"))
+#Date entry field ends
 
 button_fetch_graph = tk.Button(root, text="Display Graph", command=fetch_and_display_stock_data)
 button_fetch_graph.pack(pady=10)
