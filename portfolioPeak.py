@@ -13,6 +13,14 @@ root.title("Stock Price App")
 screen_width = root.winfo_screenmmwidth()
 screen_height = root.winfo_screenheight()
 
+width = int(screen_width * 0.8)
+height = int(screen_height * 0.8)
+
+x = (screen_width // 2) - (width // 2)
+y = (screen_height // 2) - (height // 2)
+
+root.geometry(f'{width} x {height} + {x} + {y}')
+
 def on_entry_click(event, entry, default_text):
     if entry.get() == default_text:
         entry.delete(0, tk.END)
