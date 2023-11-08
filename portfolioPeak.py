@@ -33,24 +33,6 @@ def on_focusout(event, entry, default_text):
         entry.insert(0, default_text)
         entry.config(fg='grey')
 
-# Define the function to fetch stock price
-# def fetch_stock_price():
-#     ticker = entry_ticker.get()
-#     if not ticker:
-#         messagebox.showinfo("Error", "Please enter a stock ticker symbol")
-#         return
-
-#     url = f"https://finance.yahoo.com/quote/{ticker}"
-#     response = requests.get(url)
-#     if response.status_code == 200:
-#         soup = BeautifulSoup(response.text, 'html.parser')
-#         price = soup.find('fin-streamer', {'class': 'Fw(b) Fz(36px) Mb(-4px) D(ib)'})
-#         if price:
-#             label_price.config(text=f"Current price of {ticker}: ${price.text}")
-#         else:
-#             messagebox.showinfo("Error", "Price element not found.")
-#     else:
-#         messagebox.showinfo("Error", f"Failed to fetch page with status code: {response.status_code}")
     
 def fetch_stock_price():
     ticker = entry_ticker.get()
@@ -76,35 +58,40 @@ def validate_and_format_date(data_str):
 
 #function that will fetch and display historical stock data on a graph
 def fetch_and_display_stock_data():
-    ticker = entry_ticker.get()
+    ticker1 = entry_ticker1.get()
+    ticker2 = entry_ticker2.get()
     start_date = entry_start_date.get()
     end_date = entry_end_date.get()
 
     start_date = validate_and_format_date(start_date)
     end_date = validate_and_format_date(end_date)
 
-    if not start_date or not end_date:
-        messagebox.showinfo("Error", "Please enter stock ticker symbol")
-        return
     
-    try:
-        stock_data = yf.download(ticker, start=start_date, end=end_date)
+    # ticker = entry_ticker.get()
+    # start_date = entry_start_date.get()
+    # end_date = entry_end_date.get()
 
-        fig, ax = plt.subplots()
-        stock_data['Close'].plot (ax=ax, title=f"{ticker} Stock Price")
+    # start_date = validate_and_format_date(start_date)
+    # end_date = validate_and_format_date(end_date)
 
-        canvas = FigureCanvasTkAgg(fig, master=root)
-        canvas.draw()
-        canvas.get_tk_widget().pack()
-
-        plt.close(fig)
+    # if not start_date or not end_date:
+    #     messagebox.showinfo("Error", "Please enter stock ticker symbol")
+    #     return
     
-    except Exception as e:
-        messagebox.showinfo("Error", f"An error occured: {e}")
+    # try:
+    #     stock_data = yf.download(ticker, start=start_date, end=end_date)
 
-# Set up the GUI
-# root = tk.Tk()
-# root.title("Stock Price App")
+    #     fig, ax = plt.subplots()
+    #     stock_data['Close'].plot (ax=ax, title=f"{ticker} Stock Price")
+
+    #     canvas = FigureCanvasTkAgg(fig, master=root)
+    #     canvas.draw()
+    #     canvas.get_tk_widget().pack()
+
+    #     plt.close(fig)
+    
+    # except Exception as e:
+    #     messagebox.showinfo("Error", f"An error occured: {e}")
 
 frame = tk.Frame(root)
 frame.pack(pady=20)
