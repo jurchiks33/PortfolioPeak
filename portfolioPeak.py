@@ -7,6 +7,7 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
+#Screen sizing and positioning starts
 root = tk.Tk()
 root.title("Stock Price App")
 
@@ -19,7 +20,8 @@ height = int(screen_height * 0.8)
 x = (screen_width // 2) - (width // 2)
 y = (screen_height // 2) - (height // 2)
 
-root.geometry(f'{width} x {height} + {x} + {y}')
+root.geometry(f'{width}x{height}+{x}+{y}')
+#Screen sizing and positioning ends
 
 def on_entry_click(event, entry, default_text):
     if entry.get() == default_text:
