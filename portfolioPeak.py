@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 root = tk.Tk()
 root.title("Stock Price App")
 
-screen_width = root.winfo_screenmmwidth()
+screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 
 width = int(screen_width * 0.8)
@@ -90,8 +90,8 @@ def fetch_and_display_stock_data():
         messagebox.showinfo("Error", f"An error occured: {e}")
 
 # Set up the GUI
-root = tk.Tk()
-root.title("Stock Price App")
+# root = tk.Tk()
+# root.title("Stock Price App")
 
 frame = tk.Frame(root)
 frame.pack(pady=20)
