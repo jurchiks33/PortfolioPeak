@@ -79,6 +79,11 @@ def fetch_and_display_stock_data():
             stock_data1['Close'].plot(ax=ax, label=f"{ticker1} Closing Price")
         if not stock_data2.empty:
             stock_data2['Close'].plot(ax=ax, label=f"{ticker2} Closing Price")
+        
+        ax.legend()
+        ax.set_title(f"{ticker1} vs {ticker2} Stock Price Comparison")
+        ax.set_xlabel("Date")
+        ax.set_ylabel("Price")
 
 
     # ticker = entry_ticker.get()
