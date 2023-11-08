@@ -7,6 +7,11 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
+root = tk.Tk()
+root.title("Stock Price App")
+
+screen_width = root.winfo_screenmmwidth()
+screen_height = root.winfo_screenheight()
 
 def on_entry_click(event, entry, default_text):
     if entry.get() == default_text:
