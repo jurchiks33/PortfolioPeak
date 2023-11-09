@@ -56,6 +56,12 @@ def validate_and_format_date(data_str):
     except ValueError as e:
         messagebox.showinfo("Error", f"Date format error: {e}")
 
+def create_graph_placeholder():
+    fig, ax = plt.subplots()
+    canvas = FigureCanvasTkAgg(fig, master=root)
+    canvas.get_tk_widget().pack()
+    return fig, ax, canvas
+
 #function that will fetch and display historical stock data on a graph
 def fetch_and_display_stock_data():
     ticker1 = entry_ticker1.get()
