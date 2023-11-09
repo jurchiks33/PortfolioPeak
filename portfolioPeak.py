@@ -116,18 +116,8 @@ entry_ticker2 = tk.Entry(frame)
 setup_enrtry_with_placeholder(entry_ticker2, "Second Ticker")
 entry_ticker2.pack(side=tk.LEFT)
 
-# Button to fetch and plot data
-button_fetch_graph = tk.Button(frame, text="Display Graph", 
-                               command=lambda: fetch_and_display_stock_data(ax, canvas))
-button_fetch_graph.pack(side=tk.LEFT)
-
-
 entry_ticker = tk.Entry(frame)
 entry_ticker.pack(side=tk.LEFT)
-
-# # Button command corrected to 'fetch_stock_price'
-# button_fetch = tk.Button(frame, text="Fetch Data", command=fetch_stock_price)
-# button_fetch.pack(side=tk.LEFT)
 
 label_price = tk.Label(root, text="Enter a stock ticker symbol and click fetch")
 label_price.pack(pady=20)
@@ -146,7 +136,9 @@ entry_end_date.bind('<FocusIn>', lambda event: on_entry_click(event, entry_end_d
 entry_end_date.bind('<FocusOut>', lambda event: on_focusout(event, entry_end_date, "End Date (YYYY-MM-DD)"))
 #Date entry field ends
 
-button_fetch_graph = tk.Button(root, text="Display Graph", command=fetch_and_display_stock_data)
-button_fetch_graph.pack(pady=10)
+button_fetch_graph = tk.Button(frame, text="Display Graph", 
+                               command=lambda: fetch_and_display_stock_data(ax, canvas))
+button_fetch_graph.pack(side=tk.LEFT)
+
 
 root.mainloop()
