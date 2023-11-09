@@ -94,32 +94,10 @@ def fetch_and_display_stock_data():
     except Exception as e:
         messagebox.showinfo("Error", f"An error occured: (e)")
 
-
-    # ticker = entry_ticker.get()
-    # start_date = entry_start_date.get()
-    # end_date = entry_end_date.get()
-
-    # start_date = validate_and_format_date(start_date)
-    # end_date = validate_and_format_date(end_date)
-
-    # if not start_date or not end_date:
-    #     messagebox.showinfo("Error", "Please enter stock ticker symbol")
-    #     return
-    
-    # try:
-    #     stock_data = yf.download(ticker, start=start_date, end=end_date)
-
-    #     fig, ax = plt.subplots()
-    #     stock_data['Close'].plot (ax=ax, title=f"{ticker} Stock Price")
-
-    #     canvas = FigureCanvasTkAgg(fig, master=root)
-    #     canvas.draw()
-    #     canvas.get_tk_widget().pack()
-
-    #     plt.close(fig)
-    
-    # except Exception as e:
-    #     messagebox.showinfo("Error", f"An error occured: {e}")
+def setup_enrtry_with_placeholder(entry, placeholder_text):
+    entry.insert(0, placeholder_text)
+    entry.bind('<FocusIn>', lambda event: on_entry_click(event, entry, placeholder_text))
+    entry.bind('<FocusOut>', lambda event: on_focusout(event, entry, placeholder_text))
 
 frame = tk.Frame(root)
 frame.pack(pady=20)
