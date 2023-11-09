@@ -80,34 +80,22 @@ def fetch_and_display_stock_data():
         stock_data1 = yf.download(ticker1, start=start_date, end=end_date)
         stock_data2 = yf.download(ticker2, start=start_date, end=end_date)
 
-        fig, ax = plt.subplots()
+        ax.clear()  # Clear existing plot
+
         if not stock_data1.empty:
             stock_data1['Close'].plot(ax=ax, label=f"{ticker1} Closing Price")
         if not stock_data2.empty:
             stock_data2['Close'].plot(ax=ax, label=f"{ticker2} Closing Price")
-        
+
         ax.legend()
         ax.set_title(f"{ticker1} vs {ticker2} Stock Price Comparison")
         ax.set_xlabel("Date")
         ax.set_ylabel("Price")
 
-        canvas = FigureCanvasTkAgg(fig, master=root)
-        canvas.draw()
-        canvas.get_tk_widget().pack()
-
-        plt.close(fig)
-
-        ax.clear()
-        if not stock_data1.empty:
-            stock_data1['Close'].plot(ax=ax, label=f"{ticker1} Closing Price")
-        if not stock_data2.empty:
-            stock_data2['Close'].plot(ax=ax, label=f"{ticker2} Closing Price")
-        canvas.draw()
+        canvas.draw()  # Redraw the graph with new data
 
     except Exception as e:
-        messagebox.showinfo("Error", f"An error occured: (e)")
-
-fig, ax, canvas = create_graph_placeholder()
+        messagebox.showinfo("Error", f"An error occured: {e}")
 
 def setup_enrtry_with_placeholder(entry, placeholder_text):
     entry.insert(0, placeholder_text)
