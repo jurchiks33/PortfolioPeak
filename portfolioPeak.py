@@ -1,5 +1,7 @@
 import tkinter as tk  
 from tkinter import messagebox
+from tkinter import ttk
+from tkinter import font
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import yfinance as yf
@@ -10,6 +12,11 @@ from bs4 import BeautifulSoup
 #Screen sizing and positioning starts
 root = tk.Tk()
 root.title("Stock Price App")
+
+style = ttk.Style()
+style.configure("TButton", font=('Helvetica', 12), borderwidth='4')
+style.configure("TEntry", font=('Helvetica', 12), padding=10)
+style.configure("TLabel", font=('Helvetica', 14), background='light gray')
 
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
@@ -136,9 +143,9 @@ entry_end_date.bind('<FocusIn>', lambda event: on_entry_click(event, entry_end_d
 entry_end_date.bind('<FocusOut>', lambda event: on_focusout(event, entry_end_date, "End Date (YYYY-MM-DD)"))
 #Date entry field ends
 
-button_fetch_graph = tk.Button(frame, text="Display Graph", 
+button_fetch_graph = ttk.Button(frame, text="Display Graph", 
                                command=lambda: fetch_and_display_stock_data(ax, canvas))
-button_fetch_graph.pack(side=tk.LEFT)
+button_fetch_graph.pack(side=tk.LEFT, padx=10, pady=10)
 
 
 root.mainloop()
