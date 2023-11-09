@@ -62,8 +62,10 @@ def create_graph_placeholder():
     canvas.get_tk_widget().pack()
     return fig, ax, canvas
 
+fig, ax, canvas = create_graph_placeholder()
+
 #function that will fetch and display historical stock data on a graph
-def fetch_and_display_stock_data():
+def fetch_and_display_stock_data(ax, canvas):
     ticker1 = entry_ticker1.get()
     ticker2 = entry_ticker2.get()
     start_date = entry_start_date.get()
@@ -115,8 +117,10 @@ setup_enrtry_with_placeholder(entry_ticker2, "Second Ticker")
 entry_ticker2.pack(side=tk.LEFT)
 
 # Button to fetch and plot data
-button_fetch_graph = tk.Button(frame, text="Display Graph", command=fetch_and_display_stock_data)
+button_fetch_graph = tk.Button(frame, text="Display Graph", 
+                               command=lambda: fetch_and_display_stock_data(ax, canvas))
 button_fetch_graph.pack(side=tk.LEFT)
+
 
 entry_ticker = tk.Entry(frame)
 entry_ticker.pack(side=tk.LEFT)
