@@ -97,8 +97,17 @@ def fetch_and_display_stock_data():
 
         plt.close(fig)
 
+        ax.clear()
+        if not stock_data1.empty:
+            stock_data1['Close'].plot(ax=ax, label=f"{ticker1} Closing Price")
+        if not stock_data2.empty:
+            stock_data2['Close'].plot(ax=ax, label=f"{ticker2} Closing Price")
+        canvas.draw()
+
     except Exception as e:
         messagebox.showinfo("Error", f"An error occured: (e)")
+
+fig, ax, canvas = create_graph_placeholder()
 
 def setup_enrtry_with_placeholder(entry, placeholder_text):
     entry.insert(0, placeholder_text)
