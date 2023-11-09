@@ -103,13 +103,13 @@ frame = tk.Frame(root)
 frame.pack(pady=20)
 
 entry_ticker1 = tk.Entry(frame)
+setup_enrtry_with_placeholder(entry_ticker1, "First Ticker")
 entry_ticker1.pack(side=tk.LEFT)
-entry_ticker1.insert(0, "First Ticker")
 
 # Entry for the second stock ticker
 entry_ticker2 = tk.Entry(frame)
+setup_enrtry_with_placeholder(entry_ticker2, "Second Ticker")
 entry_ticker2.pack(side=tk.LEFT)
-entry_ticker2.insert(0, "Second Ticker")
 
 # Button to fetch and plot data
 button_fetch_graph = tk.Button(frame, text="Display Graph", command=fetch_and_display_stock_data)
