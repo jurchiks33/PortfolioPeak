@@ -151,6 +151,11 @@ entry_end_date.bind('<FocusIn>', lambda event: on_entry_click(event, entry_end_d
 entry_end_date.bind('<FocusOut>', lambda event: on_focusout(event, entry_end_date, "End Date (YYYY-MM-DD)"))
 #Date entry field ends
 
+indicator_options = ['SMA', 'EMA', 'RSI', 'MACD', 'Other indicators...']
+selected_indicator = tk.StringVar()
+indicator_dropdown = ttk.Combobox(root, textvariable=selected_indicator, values=indicator_options)
+indicator_dropdown.pack()
+
 button_fetch_graph = ttk.Button(frame, text="Display Graph", 
                                command=lambda: fetch_and_display_stock_data(ax, canvas))
 button_fetch_graph.pack(side=tk.LEFT, padx=10, pady=10)
