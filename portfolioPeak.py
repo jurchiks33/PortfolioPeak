@@ -165,6 +165,12 @@ def add_indicator_to_chart():
     stock = yf.Ticker(ticker)
     stock_data = stock.history(period='1d')
 
+    indicator = selected_indicator.get()
+    if indicator == 'SMA' and not stock_data.empty:
+        sma_data = calculate_sma(stock_data, window=20)
+        ax.plot(stock_data.index, sma_data, label='20-day SMA')
+        canvas.draw()
+
 add_button = ttk.Button(root, text="Add Indicator", command=add_indicator_to_chart)
 add_button.pack()
 
