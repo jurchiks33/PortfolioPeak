@@ -8,6 +8,7 @@ import yfinance as yf
 from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
+from technical_analysis import fetch_stock_data, calculate_sma, calculate_ema
 
 #Screen sizing and positioning starts
 root = tk.Tk()
@@ -95,6 +96,13 @@ def fetch_and_display_stock_data(ax, canvas):
             stock_data1['Close'].plot(ax=ax, label=f"{ticker1} Closing Price")
         if not stock_data2.empty:
             stock_data2['Close'].plot(ax=ax, label=f"{ticker2} Closing Price")
+
+        sma_data = calculate_sma(stock_data1, window=20)  # example window size
+        ema_data = calculate_ema(stock_data1, window=20)  # example window size
+
+        # Modify the plotting section to include these lines
+        ax.plot(stock_data1.index, sma_data, label='20-day SMA')
+        ax.plot(stock_data1.index, ema_data, label='20-day EMA')
 
         ax.legend()
         ax.set_title(f"{ticker1} vs {ticker2} Stock Price Comparison")
