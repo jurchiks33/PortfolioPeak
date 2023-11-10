@@ -156,6 +156,19 @@ selected_indicator = tk.StringVar()
 indicator_dropdown = ttk.Combobox(root, textvariable=selected_indicator, values=indicator_options)
 indicator_dropdown.pack()
 
+def add_indicator_to_chart():
+    indicator = selected_indicator.get()
+    # Based on the selected indicator, call the appropriate function from technical_analysis.py
+    # and add it to the chart
+    # Example:
+    if indicator == 'SMA':
+        sma_data = calculate_sma(stock_data, window=20)  # Assuming stock_data is already fetched
+        ax.plot(stock_data.index, sma_data, label='20-day SMA')
+        canvas.draw()
+
+add_button = ttk.Button(root, text="Add Indicator", command=add_indicator_to_chart)
+add_button.pack()
+
 button_fetch_graph = ttk.Button(frame, text="Display Graph", 
                                command=lambda: fetch_and_display_stock_data(ax, canvas))
 button_fetch_graph.pack(side=tk.LEFT, padx=10, pady=10)
