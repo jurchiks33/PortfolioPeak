@@ -90,15 +90,15 @@ def fetch_and_display_stock_data(ax, canvas):
         stock_data1 = yf.download(ticker1, start=start_date, end=end_date)
         stock_data2 = yf.download(ticker2, start=start_date, end=end_date)
 
-        ax.clear()  # Clear existing plot
+        ax.clear()  
 
         if not stock_data1.empty:
             stock_data1['Close'].plot(ax=ax, label=f"{ticker1} Closing Price")
         if not stock_data2.empty:
             stock_data2['Close'].plot(ax=ax, label=f"{ticker2} Closing Price")
 
-        sma_data = calculate_sma(stock_data1, window=20)  # example window size
-        ema_data = calculate_ema(stock_data1, window=20)  # example window size
+        sma_data = calculate_sma(stock_data1, window=20)  
+        ema_data = calculate_ema(stock_data1, window=20)  
 
         # Modify the plotting section to include these lines
         ax.plot(stock_data1.index, sma_data, label='20-day SMA')
@@ -109,7 +109,7 @@ def fetch_and_display_stock_data(ax, canvas):
         ax.set_xlabel("Date")
         ax.set_ylabel("Price")
 
-        canvas.draw()  # Redraw the graph with new data
+        canvas.draw()  
 
     except Exception as e:
         messagebox.showinfo("Error", f"An error occured: {e}")
@@ -157,19 +157,41 @@ indicator_dropdown = ttk.Combobox(root, textvariable=selected_indicator, values=
 indicator_dropdown.pack()
 
 def add_indicator_to_chart():
-    ticker = entry_ticker.get()
-    if not ticker:
-        messagebox.showinfo("Error", "Please enter a stock ticker symbol")
+    ticker1 = entry_ticker1.get()
+    if not ticker1 or ticker1 in ["First Ticker", "TICKER", "SECOND", ""]:
+        messagebox.showinfo("Error", "Please enter the first stock ticker symbol")
         return
 
-    stock = yf.Ticker(ticker)
-    stock_data = stock.history(period='1d')
+    start_date = entry_start_date.get()
+    end_date = entry_end_date.get()
+    if start_date in ["Start Date (YYYY-MM-DD)", ""] or end_date in ["End Date (YYYY-MM-DD)", ""]:
+        messagebox.showinfo("Error", "Please enter valid start and end dates")
+        return
 
-    indicator = selected_indicator.get()
-    if indicator == 'SMA' and not stock_data.empty:
-        sma_data = calculate_sma(stock_data, window=20)
-        ax.plot(stock_data.index, sma_data, label='20-day SMA')
-        canvas.draw()
+    start_date = validate_and_format_date(start_date)
+    end_date = validate_and_format_date(end_date)
+
+    if not (start_date and end_date):
+        messagebox.showinfo("Error", "Please enter valid start and end dates")
+        return
+
+    try:
+        stock_data1 = yf.download(ticker1, start=start_date, end=end_date)
+
+        indicator = selected_indicator.get()
+        if indicator == 'SMA' and not stock_data1.empty:
+            sma_data = calculate_sma(stock_data1, window=20)
+            ax.plot(stock_data1.index, sma_data, label='20-day SMA')
+            canvas.draw()
+        elif indicator == 'EMA' and not stock_data1.empty:
+            ema_data = calculate_ema(stock_data1, window=20)
+            ax.plot(stock_data1.index, ema_data, label='20-day EMA')
+            canvas.draw()
+
+        ax.legend()
+
+    except Exception as e:
+        messagebox.showinfo("Error", f"An error occurred: {e}")
 
 add_button = ttk.Button(root, text="Add Indicator", command=add_indicator_to_chart)
 add_button.pack()
