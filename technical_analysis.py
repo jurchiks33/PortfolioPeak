@@ -53,3 +53,7 @@ def calculate_atr(data, window):
     true_range = np.max(ranges, axis=1)
     atr = true_range.rolling(window=window).mean()
     return atr
+
+def calculate_vwap(data):
+    vwap = (data['Volume'] * (data['High'] + data['Low'] + data['Close']) / 3).cumsum() / data['Volume'].cumsum()
+    return vwap
