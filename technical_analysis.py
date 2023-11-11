@@ -44,3 +44,12 @@ def calculate_macd_histogram(data, short_window=12, long_window=26, signal=9):
     macd, signal_line = calculate_macd(data, short_window, long_window, signal)
     histogram = macd - signal_line
     return histogram
+
+def calculate_atr(data, window):
+    high_low = data['High'] - data['Low']
+    high_close = np.abs(data['High'] - data['Close'].shift())
+    low_close = np.abs(data['Low'] - data['Close'].shift())
+    ranges = pd.concat([high_low, high_close, low_close], axis=1)
+    true_range = np.max(ranges, axis=1)
+    atr = true_range.rolling(window=window).mean()
+    return atr
