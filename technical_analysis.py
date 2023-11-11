@@ -92,3 +92,7 @@ def calculate_williams_r(data, window):
     low_min = data['Low'].rolling(window=window).min()
     williams_r = -100 * ((high_max - data['Close']) / (high_max - low_min))
     return williams_r
+
+def calculate_obv(data):
+    obv = (np.sign(data['Close'].diff()) * data['Volume']).fillna(0).cumsum()
+    return obv
