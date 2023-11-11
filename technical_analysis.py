@@ -33,3 +33,9 @@ def calculate_bollinger_bands(data, window):
     upper_band = sma + (std * 2)
     lower_band = sma - (std * 2)
     return upper_band, lower_band
+
+def calculate_stochastic_oscillator(data, window):
+    low_min = data['Low'].rolling(window=window).min()
+    high_max = data['High'].rolling(window=window).max()
+    stoch = ((data['Close'] - low_min) / (high_max - low_min)) * 100
+    return stoch
