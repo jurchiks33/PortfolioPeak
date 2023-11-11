@@ -63,3 +63,8 @@ def calculate_parabolic_sar(data):
     sar = data['Close'].rolling(window=2).apply(lambda x: x[1] if x[1] > x[0] else x[0], raw=True)
     return sar
 
+def calculate_cci(data, window):
+    tp = (data['High'] + data['Low'] + data['Close']) / 3
+    cci = (tp - tp.rolling(window=window).mean()) / (0.015 * tp.rolling(window=window).std())
+    return cci
+
