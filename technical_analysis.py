@@ -26,3 +26,10 @@ def calculate_macd(data, short_window=12, long_window=26, signal=9):
     macd = short_ema - long_ema
     signal_line = macd.ewm(span=signal, adjust=False).mean()
     return macd, signal_line
+
+def calculate_bollinger_bands(data, window):
+    sma = data['Close'].rolling(window=window).mean()
+    std = data['Close'].rolling(window=window).std()
+    upper_band = sma + (std * 2)
+    lower_band = sma - (std * 2)
+    return upper_band, lower_band
