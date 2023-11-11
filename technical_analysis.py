@@ -57,3 +57,9 @@ def calculate_atr(data, window):
 def calculate_vwap(data):
     vwap = (data['Volume'] * (data['High'] + data['Low'] + data['Close']) / 3).cumsum() / data['Volume'].cumsum()
     return vwap
+
+def calculate_parabolic_sar(data):
+    # This is a simplified version and might not cover all aspects of the Parabolic SAR calculation
+    sar = data['Close'].rolling(window=2).apply(lambda x: x[1] if x[1] > x[0] else x[0], raw=True)
+    return sar
+
