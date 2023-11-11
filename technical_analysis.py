@@ -86,3 +86,9 @@ def calculate_ichimoku_cloud(data):
     chikou_span = data['Close'].shift(-26)
 
     return tenkan_sen, kijun_sen, senkou_span_a, senkou_span_b, chikou_span
+
+def calculate_williams_r(data, window):
+    high_max = data['High'].rolling(window=window).max()
+    low_min = data['Low'].rolling(window=window).min()
+    williams_r = -100 * ((high_max - data['Close']) / (high_max - low_min))
+    return williams_r
