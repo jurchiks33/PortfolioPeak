@@ -39,3 +39,8 @@ def calculate_stochastic_oscillator(data, window):
     high_max = data['High'].rolling(window=window).max()
     stoch = ((data['Close'] - low_min) / (high_max - low_min)) * 100
     return stoch
+
+def calculate_macd_histogram(data, short_window=12, long_window=26, signal=9):
+    macd, signal_line = calculate_macd(data, short_window, long_window, signal)
+    histogram = macd - signal_line
+    return histogram
