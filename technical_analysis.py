@@ -68,3 +68,21 @@ def calculate_cci(data, window):
     cci = (tp - tp.rolling(window=window).mean()) / (0.015 * tp.rolling(window=window).std())
     return cci
 
+def calculate_ichimoku_cloud(data):
+    high_9 = data['High'].rolling(window=9).max()
+    low_9 = data['Low'].rolling(window=9).min()
+    tenkan_sen = (high_9 + low_9) / 2
+
+    high_26 = data['High'].rolling(window=26).max()
+    low_26 = data['Low'].rolling(window=26).min()
+    kijun_sen = (high_26 + low_26) / 2
+
+    senkou_span_a = ((tenkan_sen + kijun_sen) / 2).shift(26)
+
+    high_52 = data['High'].rolling(window=52).max()
+    low_52 = data['Low'].rolling(window=52).min()
+    senkou_span_b = ((high_52 + low_52) / 2).shift(26)
+
+    chikou_span = data['Close'].shift(-26)
+
+    return tenkan_sen, kijun_sen, senkou_span_a, senkou_span_b, chikou_span
