@@ -86,38 +86,56 @@ time_frame_dropdown = ttk.Combobox(root, textvariable=selected_time_frame, value
 time_frame_dropdown.pack()
 
 #function that will fetch and display historical stock data on a graph
-def fetch_and_display_stock_data(ax, canvas):
-    ticker1 = entry_ticker1.get()
+def fetch_and_display_stock_data():
+    # Retrieve user input
+    ticker = entry_ticker.get()  # Use the correct Entry widget for ticker
     start_date = entry_start_date.get()
     end_date = entry_end_date.get()
 
+    # Validate and format dates
     start_date = validate_and_format_date(start_date)
     end_date = validate_and_format_date(end_date)
-
-    if not (start_date and end_date):
+    if not start_date or not end_date:
         messagebox.showinfo("Error", "Please enter valid start and end dates")
         return
-    
+
+    # Determine the selected time frame
     time_frame = selected_time_frame.get()
-    interval = '1h'  # default value
-    if time_frame in ['5m', '30m', '1h', '1d', '5d', '1wk', '1mo', '3mo']:
+    interval = '1d'  # default value for daily data
+    if time_frame in ['1m', '2m', '5m', '15m', '30m', '60m', '90m', '1h', '1d', '5d', '1wk', '1mo', '3mo']:
         interval = time_frame
 
     try:
-        stock_data1 = yf.download(ticker1, start=start_date, end=end_date, interval=interval)
+        # Download the stock data
+        stock_data = yf.download(ticker, start=start_date, end=end_date, interval=interval)
 
-        # If the user selects '4h', resample the '1h' data to '4h' intervals
-        if time_frame == '4h':
-            stock_data1 = stock_data1.resample('4H').agg({
-                'Open': 'first',
-                'High': 'max',
-                'Low': 'min',
-                'Close': 'last',
-                'Volume': 'sum'
-            })
+        # Clear any existing plot
+        plt.clf()
+        plt.cla()
+        plt.close('all')
+
+        # Plot the data based on the selected chart type
+        chart_type = selected_chart_type.get()
+        if chart_type == 'Line':
+            plt.plot(stock_data.index, stock_data['Close'], label=f"{ticker} Closing Price")
+        elif chart_type == 'Bar':
+            # If mplfinance is not installed or if you prefer to use matplotlib for bar charts
+            plt.bar(stock_data.index, stock_data['Close'], label=f"{ticker} Closing Price")
+        
+        plt.legend()
+        plt.title(f"{ticker} Stock Price")
+        plt.xlabel("Date")
+        plt.ylabel("Price")
+
+        # Draw the plot on the canvas
+        canvas.draw_idle()
+
+        # Re-pack the canvas in the Tkinter window
+        canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
     except Exception as e:
         messagebox.showinfo("Error", f"An error occurred: {e}")
+
 
 def setup_enrtry_with_placeholder(entry, placeholder_text):
     entry.insert(0, placeholder_text)
