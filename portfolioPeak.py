@@ -65,9 +65,9 @@ def validate_and_format_date(data_str):
         messagebox.showinfo("Error", f"Date format error: {e}")
 
 def create_graph_placeholder():
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(10, 5))
     canvas = FigureCanvasTkAgg(fig, master=root)
-    canvas.get_tk_widget().pack()
+    canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
     return fig, ax, canvas
 
 fig, ax, canvas = create_graph_placeholder()
