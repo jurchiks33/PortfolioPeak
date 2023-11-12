@@ -96,12 +96,10 @@ selected_time_frame.trace('w', update_time_frame)
 
 #function that will fetch and display historical stock data on a graph
 def fetch_and_display_stock_data():
-    # Clear any existing plot
-    plt.clf()
-    plt.cla()
-    plt.close('all')
+    # Clear the current figure's axes
+    ax.clear()
     
-    ticker = entry_ticker.get()  # Ensure this is the correct Entry widget for ticker symbol
+    ticker = entry_ticker1.get()  # Ensure this is the correct Entry widget for the ticker symbol
     start_date = entry_start_date.get()
     end_date = entry_end_date.get()
     
@@ -109,13 +107,17 @@ def fetch_and_display_stock_data():
     start_date = validate_and_format_date(start_date)
     end_date = validate_and_format_date(end_date)
     
+    if not ticker:  # Check if the ticker symbol is empty
+        messagebox.showinfo("Error", "Please enter a stock ticker symbol")
+        return
+    
     if not start_date or not end_date:
         messagebox.showinfo("Error", "Please enter valid start and end dates")
         return
     
     # Determine the selected time frame
     time_frame = selected_time_frame.get()
-    interval = '1d'  # default value for daily data
+    interval = '1d'  # Default value for daily data
     if time_frame in ['1m', '2m', '5m', '15m', '30m', '60m', '90m', '1h', '1d', '5d', '1wk', '1mo', '3mo']:
         interval = time_frame
 
@@ -123,26 +125,28 @@ def fetch_and_display_stock_data():
         # Download the stock data
         stock_data = yf.download(ticker, start=start_date, end=end_date, interval=interval)
         
+        if stock_data.empty:
+            messagebox.showinfo("Error", f"No data returned for {ticker}.")
+            return
+
         # Plot the data based on the selected chart type
         chart_type = selected_chart_type.get()
         if chart_type == 'Line':
-            plt.plot(stock_data.index, stock_data['Close'], label=f"{ticker} Closing Price")
+            ax.plot(stock_data.index, stock_data['Close'], label=f"{ticker} Closing Price")
         elif chart_type == 'Bar':
-            plt.bar(stock_data.index, stock_data['Close'], label=f"{ticker} Closing Price")
+            ax.bar(stock_data.index, stock_data['Close'], label=f"{ticker} Closing Price")
         
-        plt.legend()
-        plt.title(f"{ticker} Stock Price")
-        plt.xlabel("Date")
-        plt.ylabel("Price")
-
-        # Draw the plot on the canvas
-        fig, ax = plt.subplots(figsize=(10, 5))  # Create a new figure
-        canvas = FigureCanvasTkAgg(fig, master=root)  # Create a new canvas
-        canvas.draw()
-        canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)  # Pack the canvas in the Tkinter window
-
+        ax.legend()
+        ax.set_title(f"{ticker} Stock Price")
+        ax.set_xlabel("Date")
+        ax.set_ylabel("Price")
+        
+        # Redraw the canvas with the new plot
+        canvas.draw_idle()
+        
     except Exception as e:
         messagebox.showinfo("Error", f"An error occurred: {e}")
+
 
 def setup_enrtry_with_placeholder(entry, placeholder_text):
     entry.insert(0, placeholder_text)
@@ -153,7 +157,7 @@ frame = tk.Frame(root)
 frame.pack(pady=20)
 
 entry_ticker1 = tk.Entry(frame)
-setup_enrtry_with_placeholder(entry_ticker1, "First Ticker")
+setup_enrtry_with_placeholder(entry_ticker1, "Enter Ticker")
 entry_ticker1.pack(side=tk.LEFT)
 
 # Entry for the second stock ticker
