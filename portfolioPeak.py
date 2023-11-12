@@ -157,6 +157,12 @@ selected_chart_type = tk.StringVar()
 chart_type_dropdown = ttk.Combobox(root, textvariable=selected_chart_type, values=chart_type_options)
 chart_type_dropdown.pack()
 
+# Dropdown for selecting time frame
+time_frame_options = ['5m', '30m', '1h', '4h', '1d']
+selected_time_frame = tk.StringVar()
+time_frame_dropdown = ttk.Combobox(root, textvariable=selected_time_frame, values=time_frame_options)
+time_frame_dropdown.pack()
+
 indicator_options = ['SMA', 'EMA', 'RSI', 'MACD', 'bollinger bands', 'stochastic oscilator', 'MACD histogram', 'ATR', 'VWAP', 'Parabolic Sar',
                      'CCI', 'ichimoku cloud', 'williams_r', 'OTHER INDICATORS......']
 selected_indicator = tk.StringVar()
