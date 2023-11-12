@@ -151,6 +151,12 @@ entry_end_date.bind('<FocusIn>', lambda event: on_entry_click(event, entry_end_d
 entry_end_date.bind('<FocusOut>', lambda event: on_focusout(event, entry_end_date, "End Date (YYYY-MM-DD)"))
 #Date entry field ends
 
+# Dropdown for selecting chart type
+chart_type_options = ['Line', 'Bar']
+selected_chart_type = tk.StringVar()
+chart_type_dropdown = ttk.Combobox(root, textvariable=selected_chart_type, values=chart_type_options)
+chart_type_dropdown.pack()
+
 indicator_options = ['SMA', 'EMA', 'RSI', 'MACD', 'bollinger bands', 'stochastic oscilator', 'MACD histogram', 'ATR', 'VWAP', 'Parabolic Sar',
                      'CCI', 'ichimoku cloud', 'williams_r', 'OTHER INDICATORS......']
 selected_indicator = tk.StringVar()
