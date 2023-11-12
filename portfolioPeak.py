@@ -100,6 +100,20 @@ def fetch_and_display_stock_data(ax, canvas):
         sma_data = calculate_sma(stock_data1, window=20)  
         ema_data = calculate_ema(stock_data1, window=20)  
 
+        time_frame = selected_time_frame.get()
+        interval = '1d'  # default value
+
+        if time_frame == '5m':
+            interval = '5m'
+        elif time_frame == '30m':
+            interval = '30m'
+        elif time_frame == '1h':
+            interval = '1h'
+        elif time_frame == '4h':
+            interval = '4h'
+        
+        stock_data1 = yf.download(ticker1, start=start_date, end=end_date, interval=interval)
+
         # Modify the plotting section to include these lines
         ax.plot(stock_data1.index, sma_data, label='20-day SMA')
         ax.plot(stock_data1.index, ema_data, label='20-day EMA')
