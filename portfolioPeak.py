@@ -72,6 +72,18 @@ def create_graph_placeholder():
 
 fig, ax, canvas = create_graph_placeholder()
 
+# Dropdown for selecting chart type
+chart_type_options = ['Line', 'Bar']
+selected_chart_type = tk.StringVar()
+chart_type_dropdown = ttk.Combobox(root, textvariable=selected_chart_type, values=chart_type_options)
+chart_type_dropdown.pack()
+
+# Dropdown for selecting time frame
+time_frame_options = ['5m', '30m', '1h', '4h', '1d']
+selected_time_frame = tk.StringVar()
+time_frame_dropdown = ttk.Combobox(root, textvariable=selected_time_frame, values=time_frame_options)
+time_frame_dropdown.pack()
+
 #function that will fetch and display historical stock data on a graph
 def fetch_and_display_stock_data(ax, canvas):
     ticker1 = entry_ticker1.get()
@@ -86,47 +98,58 @@ def fetch_and_display_stock_data(ax, canvas):
         messagebox.showinfo("Error", "Please enter valid start and end dates")
         return
     
+    # Determine the selected time frame
+    time_frame = selected_time_frame.get()
+    interval = '1d'  # default value
+
+    if time_frame == '5m':
+        interval = '5m'
+    elif time_frame == '30m':
+        interval = '30m'
+    elif time_frame == '1h':
+        interval = '1h'
+    elif time_frame == '4h':
+        interval = '4h'
+
     try:
-        stock_data1 = yf.download(ticker1, start=start_date, end=end_date)
-        stock_data2 = yf.download(ticker2, start=start_date, end=end_date)
-
-        ax.clear()  
-
-        if not stock_data1.empty:
-            stock_data1['Close'].plot(ax=ax, label=f"{ticker1} Closing Price")
-        if not stock_data2.empty:
-            stock_data2['Close'].plot(ax=ax, label=f"{ticker2} Closing Price")
-
-        sma_data = calculate_sma(stock_data1, window=20)  
-        ema_data = calculate_ema(stock_data1, window=20)  
-
-        time_frame = selected_time_frame.get()
-        interval = '1d'  # default value
-
-        if time_frame == '5m':
-            interval = '5m'
-        elif time_frame == '30m':
-            interval = '30m'
-        elif time_frame == '1h':
-            interval = '1h'
-        elif time_frame == '4h':
-            interval = '4h'
-        
         stock_data1 = yf.download(ticker1, start=start_date, end=end_date, interval=interval)
+        stock_data2 = yf.download(ticker2, start=start_date, end=end_date, interval=interval)
 
-        # Modify the plotting section to include these lines
-        ax.plot(stock_data1.index, sma_data, label='20-day SMA')
-        ax.plot(stock_data1.index, ema_data, label='20-day EMA')
+        # Clear any existing plot
+        ax.clear()
+
+        # Determine the selected chart type
+        chart_type = selected_chart_type.get()
+
+        if chart_type == 'Line':
+            # Plot line charts
+            if not stock_data1.empty:
+                ax.plot(stock_data1.index, stock_data1['Close'], label=f"{ticker1} Closing Price (Line)")
+            if not stock_data2.empty:
+                ax.plot(stock_data2.index, stock_data2['Close'], label=f"{ticker2} Closing Price (Line)")
+        elif chart_type == 'Bar':
+            # Plot bar charts
+            if not stock_data1.empty:
+                ax.bar(stock_data1.index, stock_data1['Close'], label=f"{ticker1} Closing Price (Bar)")
+            if not stock_data2.empty:
+                ax.bar(stock_data2.index, stock_data2['Close'], label=f"{ticker2} Closing Price (Bar)")
+
+        # Calculate and plot SMA and EMA for the first ticker
+        if not stock_data1.empty:
+            sma_data = calculate_sma(stock_data1, window=20)
+            ema_data = calculate_ema(stock_data1, window=20)
+            ax.plot(stock_data1.index, sma_data, label='20-day SMA')
+            ax.plot(stock_data1.index, ema_data, label='20-day EMA')
 
         ax.legend()
         ax.set_title(f"{ticker1} vs {ticker2} Stock Price Comparison")
         ax.set_xlabel("Date")
         ax.set_ylabel("Price")
 
-        canvas.draw()  
+        canvas.draw()
 
     except Exception as e:
-        messagebox.showinfo("Error", f"An error occured: {e}")
+        messagebox.showinfo("Error", f"An error occurred: {e}")
 
 def setup_enrtry_with_placeholder(entry, placeholder_text):
     entry.insert(0, placeholder_text)
@@ -165,17 +188,7 @@ entry_end_date.bind('<FocusIn>', lambda event: on_entry_click(event, entry_end_d
 entry_end_date.bind('<FocusOut>', lambda event: on_focusout(event, entry_end_date, "End Date (YYYY-MM-DD)"))
 #Date entry field ends
 
-# Dropdown for selecting chart type
-chart_type_options = ['Line', 'Bar']
-selected_chart_type = tk.StringVar()
-chart_type_dropdown = ttk.Combobox(root, textvariable=selected_chart_type, values=chart_type_options)
-chart_type_dropdown.pack()
 
-# Dropdown for selecting time frame
-time_frame_options = ['5m', '30m', '1h', '4h', '1d']
-selected_time_frame = tk.StringVar()
-time_frame_dropdown = ttk.Combobox(root, textvariable=selected_time_frame, values=time_frame_options)
-time_frame_dropdown.pack()
 
 indicator_options = ['SMA', 'EMA', 'RSI', 'MACD', 'bollinger bands', 'stochastic oscilator', 'MACD histogram', 'ATR', 'VWAP', 'Parabolic Sar',
                      'CCI', 'ichimoku cloud', 'williams_r', 'OTHER INDICATORS......']
