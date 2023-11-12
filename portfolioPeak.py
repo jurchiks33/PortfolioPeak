@@ -99,39 +99,22 @@ def fetch_and_display_stock_data(ax, canvas):
         return
     
     time_frame = selected_time_frame.get()
-    interval = '1d'  # default value
-    if time_frame == '5m':
-        interval = '5m'
-    elif time_frame == '30m':
-        interval = '30m'
-    elif time_frame == '1h':
-        interval = '1h'
-    elif time_frame == '4h':
-        interval = '4h'
-    # ... handle other time frames ...
+    interval = '1h'  # default value
+    if time_frame in ['5m', '30m', '1h', '1d', '5d', '1wk', '1mo', '3mo']:
+        interval = time_frame
 
     try:
         stock_data1 = yf.download(ticker1, start=start_date, end=end_date, interval=interval)
-        
-        # Clear any existing plot
-        ax.clear()
-        canvas.get_tk_widget().pack_forget()  # Hide the existing canvas
 
-        chart_type = selected_chart_type.get()
-        if chart_type == 'Line':
-            # Plot line chart
-            ax.plot(stock_data1.index, stock_data1['Close'], label=f"{ticker1} Closing Price (Line)")
-            # Re-display the canvas and draw the plot
-            canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
-            canvas.draw()
-        elif chart_type == 'Candle':
-            # Plot candlestick chart
-            # Here you don't need to clear the ax as mplfinance will generate its own figure and axes
-            mpf.plot(stock_data1, type='candle', mav=(20), volume=True, show_nontrading=False)
-            # Note: mplfinance creates its own figure and does not use ax, so the canvas is not drawn here.
-            # Instead, mplfinance's own plotting function displays the plot.
-
-        # ... Any additional code for setting up the plot ...
+        # If the user selects '4h', resample the '1h' data to '4h' intervals
+        if time_frame == '4h':
+            stock_data1 = stock_data1.resample('4H').agg({
+                'Open': 'first',
+                'High': 'max',
+                'Low': 'min',
+                'Close': 'last',
+                'Volume': 'sum'
+            })
 
     except Exception as e:
         messagebox.showinfo("Error", f"An error occurred: {e}")
