@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import yfinance as yf
 from datetime import datetime
+import mplfinance as mpf
 import requests
 from bs4 import BeautifulSoup
 from technical_analysis import fetch_stock_data, calculate_sma, calculate_ema
@@ -87,7 +88,6 @@ time_frame_dropdown.pack()
 #function that will fetch and display historical stock data on a graph
 def fetch_and_display_stock_data(ax, canvas):
     ticker1 = entry_ticker1.get()
-    ticker2 = entry_ticker2.get()
     start_date = entry_start_date.get()
     end_date = entry_end_date.get()
 
@@ -98,10 +98,8 @@ def fetch_and_display_stock_data(ax, canvas):
         messagebox.showinfo("Error", "Please enter valid start and end dates")
         return
     
-    # Determine the selected time frame
     time_frame = selected_time_frame.get()
     interval = '1d'  # default value
-
     if time_frame == '5m':
         interval = '5m'
     elif time_frame == '30m':
@@ -110,43 +108,30 @@ def fetch_and_display_stock_data(ax, canvas):
         interval = '1h'
     elif time_frame == '4h':
         interval = '4h'
+    # ... handle other time frames ...
 
     try:
         stock_data1 = yf.download(ticker1, start=start_date, end=end_date, interval=interval)
-        stock_data2 = yf.download(ticker2, start=start_date, end=end_date, interval=interval)
-
+        
         # Clear any existing plot
         ax.clear()
+        canvas.get_tk_widget().pack_forget()  # Hide the existing canvas
 
-        # Determine the selected chart type
         chart_type = selected_chart_type.get()
-
         if chart_type == 'Line':
-            # Plot line charts
-            if not stock_data1.empty:
-                ax.plot(stock_data1.index, stock_data1['Close'], label=f"{ticker1} Closing Price (Line)")
-            if not stock_data2.empty:
-                ax.plot(stock_data2.index, stock_data2['Close'], label=f"{ticker2} Closing Price (Line)")
-        elif chart_type == 'Bar':
-            # Plot bar charts
-            if not stock_data1.empty:
-                ax.bar(stock_data1.index, stock_data1['Close'], label=f"{ticker1} Closing Price (Bar)")
-            if not stock_data2.empty:
-                ax.bar(stock_data2.index, stock_data2['Close'], label=f"{ticker2} Closing Price (Bar)")
+            # Plot line chart
+            ax.plot(stock_data1.index, stock_data1['Close'], label=f"{ticker1} Closing Price (Line)")
+            # Re-display the canvas and draw the plot
+            canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+            canvas.draw()
+        elif chart_type == 'Candle':
+            # Plot candlestick chart
+            # Here you don't need to clear the ax as mplfinance will generate its own figure and axes
+            mpf.plot(stock_data1, type='candle', mav=(20), volume=True, show_nontrading=False)
+            # Note: mplfinance creates its own figure and does not use ax, so the canvas is not drawn here.
+            # Instead, mplfinance's own plotting function displays the plot.
 
-        # Calculate and plot SMA and EMA for the first ticker
-        if not stock_data1.empty:
-            sma_data = calculate_sma(stock_data1, window=20)
-            ema_data = calculate_ema(stock_data1, window=20)
-            ax.plot(stock_data1.index, sma_data, label='20-day SMA')
-            ax.plot(stock_data1.index, ema_data, label='20-day EMA')
-
-        ax.legend()
-        ax.set_title(f"{ticker1} vs {ticker2} Stock Price Comparison")
-        ax.set_xlabel("Date")
-        ax.set_ylabel("Price")
-
-        canvas.draw()
+        # ... Any additional code for setting up the plot ...
 
     except Exception as e:
         messagebox.showinfo("Error", f"An error occurred: {e}")
@@ -236,8 +221,7 @@ def add_indicator_to_chart():
 add_button = ttk.Button(root, text="Add Indicator", command=add_indicator_to_chart)
 add_button.pack()
 
-button_fetch_graph = ttk.Button(frame, text="Display Graph", 
-                               command=lambda: fetch_and_display_stock_data(ax, canvas))
+button_fetch_graph = ttk.Button(frame, text="Display Graph", command=lambda: fetch_and_display_stock_data(ax, canvas))
 button_fetch_graph.pack(side=tk.LEFT, padx=10, pady=10)
 
 
