@@ -75,30 +75,44 @@ fig, ax, canvas = create_graph_placeholder()
 
 # Dropdown for selecting chart type
 chart_type_options = ['Line', 'Bar']
-selected_chart_type = tk.StringVar()
+selected_chart_type = tk.StringVar(value=chart_type_options[0])  # Set default value
 chart_type_dropdown = ttk.Combobox(root, textvariable=selected_chart_type, values=chart_type_options)
 chart_type_dropdown.pack()
 
 # Dropdown for selecting time frame
-time_frame_options = ['5m', '30m', '1h', '4h', '1d']
-selected_time_frame = tk.StringVar()
+time_frame_options = ['1m', '2m', '5m', '15m', '30m', '60m', '90m', '1h', '1d', '5d', '1wk', '1mo', '3mo']
+selected_time_frame = tk.StringVar(value=time_frame_options[4])  # Set default value
 time_frame_dropdown = ttk.Combobox(root, textvariable=selected_time_frame, values=time_frame_options)
 time_frame_dropdown.pack()
 
+def update_chart_type(*args):
+    pass  # Placeholder for now
+
+def update_time_frame(*args):
+    pass  # Placeholder for now
+
+selected_chart_type.trace('w', update_chart_type)
+selected_time_frame.trace('w', update_time_frame)
+
 #function that will fetch and display historical stock data on a graph
 def fetch_and_display_stock_data():
-    # Retrieve user input
-    ticker = entry_ticker.get()  # Use the correct Entry widget for ticker
+    # Clear any existing plot
+    plt.clf()
+    plt.cla()
+    plt.close('all')
+    
+    ticker = entry_ticker.get()  # Ensure this is the correct Entry widget for ticker symbol
     start_date = entry_start_date.get()
     end_date = entry_end_date.get()
-
+    
     # Validate and format dates
     start_date = validate_and_format_date(start_date)
     end_date = validate_and_format_date(end_date)
+    
     if not start_date or not end_date:
         messagebox.showinfo("Error", "Please enter valid start and end dates")
         return
-
+    
     # Determine the selected time frame
     time_frame = selected_time_frame.get()
     interval = '1d'  # default value for daily data
@@ -108,18 +122,12 @@ def fetch_and_display_stock_data():
     try:
         # Download the stock data
         stock_data = yf.download(ticker, start=start_date, end=end_date, interval=interval)
-
-        # Clear any existing plot
-        plt.clf()
-        plt.cla()
-        plt.close('all')
-
+        
         # Plot the data based on the selected chart type
         chart_type = selected_chart_type.get()
         if chart_type == 'Line':
             plt.plot(stock_data.index, stock_data['Close'], label=f"{ticker} Closing Price")
         elif chart_type == 'Bar':
-            # If mplfinance is not installed or if you prefer to use matplotlib for bar charts
             plt.bar(stock_data.index, stock_data['Close'], label=f"{ticker} Closing Price")
         
         plt.legend()
@@ -128,14 +136,13 @@ def fetch_and_display_stock_data():
         plt.ylabel("Price")
 
         # Draw the plot on the canvas
-        canvas.draw_idle()
-
-        # Re-pack the canvas in the Tkinter window
-        canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+        fig, ax = plt.subplots(figsize=(10, 5))  # Create a new figure
+        canvas = FigureCanvasTkAgg(fig, master=root)  # Create a new canvas
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)  # Pack the canvas in the Tkinter window
 
     except Exception as e:
         messagebox.showinfo("Error", f"An error occurred: {e}")
-
 
 def setup_enrtry_with_placeholder(entry, placeholder_text):
     entry.insert(0, placeholder_text)
@@ -222,7 +229,7 @@ def add_indicator_to_chart():
 add_button = ttk.Button(root, text="Add Indicator", command=add_indicator_to_chart)
 add_button.pack()
 
-button_fetch_graph = ttk.Button(frame, text="Display Graph", command=lambda: fetch_and_display_stock_data(ax, canvas))
+button_fetch_graph = ttk.Button(frame, text="Display Graph", command=fetch_and_display_stock_data)
 button_fetch_graph.pack(side=tk.LEFT, padx=10, pady=10)
 
 
