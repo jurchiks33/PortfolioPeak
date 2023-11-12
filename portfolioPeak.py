@@ -151,7 +151,8 @@ entry_end_date.bind('<FocusIn>', lambda event: on_entry_click(event, entry_end_d
 entry_end_date.bind('<FocusOut>', lambda event: on_focusout(event, entry_end_date, "End Date (YYYY-MM-DD)"))
 #Date entry field ends
 
-indicator_options = ['SMA', 'EMA', 'RSI', 'MACD', 'Other indicators...']
+indicator_options = ['SMA', 'EMA', 'RSI', 'MACD', 'bollinger bands', 'stochastic oscilator', 'MACD histogram', 'ATR', 'VWAP', 'Parabolic Sar',
+                     'CCI', 'ichimoku cloud', 'williams_r', 'OTHER INDICATORS......']
 selected_indicator = tk.StringVar()
 indicator_dropdown = ttk.Combobox(root, textvariable=selected_indicator, values=indicator_options)
 indicator_dropdown.pack()
